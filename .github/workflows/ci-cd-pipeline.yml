@@ -21,10 +21,10 @@ jobs:
           distribution: 'temurin'
 
       - name: List Java files
-        run: find src\test\java\org\example -name "*.java"
+        run: find src/test/java/org/example -name "*.java"
 
       - name: Compile Java files
-        run: javac -cp ./lib/junit-platform-console-standalone-1.10.0.jar -d out $(find src\test\java\org\example -name "*.java")
+        run: javac -cp ./lib/junit-platform-console-standalone-1.10.0.jar -d out $(find src/test/java/org/example -name "*.java")
 
       - name: Run tests
         run: java -jar ./lib/junit-platform-console-standalone-1.10.0.jar -cp out --scan-classpath
