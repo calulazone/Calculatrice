@@ -2,7 +2,8 @@ name: Java Manual CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - master
   pull_request:
 
 jobs:
@@ -19,15 +20,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Create output directory
-        run: mkdir -p out
+      - name: List Java files
+        run: find src/test -name "*.java"
 
-      - name: Compile tests
-        run: |
-          javac -cp libs/junit-platform-console-standalone-1.10.0.jar \
-            -d out $(find src/test/java -name "*.java")
+      - name: Compile Java files
+        run: javac -cp ./lib/junit-platform-console-standalone-1.10.0.jar -d out $(find src/test -name "*.java")
 
       - name: Run tests
-        run: |
-          java -jar libs/junit-platform-console-standalone-1.10.0.jar \
-            --class-path out --scan-class-path
+        run: java -jar ./lib/junit-platform-console-standalone-1.10.0.jar -cp out --scan-classpath
