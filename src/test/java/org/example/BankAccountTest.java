@@ -48,7 +48,7 @@ class BankAccountTest {
     }
 
     @Test
-    void retrait_invalide_negatif_test() {
+    void retrait_invalide_negatif() {
         assertThrows(IllegalArgumentException.class, () -> account.withdraw(-5));
     }
 }
