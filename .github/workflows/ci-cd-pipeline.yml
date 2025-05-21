@@ -22,10 +22,9 @@ jobs:
 
     - name: Download JUnit 5 platform and Jupiter API jars
       run: |
-        mkdir libs
-        curl -L -o libs/junit-platform-console-standalone.jar \
-          https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.4/junit-platform-console-standalone-1.9.4.jar
-
+        mkdir -p libs
+        curl -L -o libs/junit-platform-console-standalone.jar https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.4/junit-platform-console-standalone-1.9.4.jar
+        ls -lh libs/junit-platform-console-standalone.jar
     - name: Compile sources and tests
       run: |
         mkdir -p out/classes
