@@ -1,4 +1,4 @@
-name: Java CI with Gradle and Tests
+name: Java CI without Maven/Gradle
 
 on:
   push:
@@ -11,20 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up JDK 21 (Temurin)
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+    - name: Download JUnit 5 platform and Jupiter API jars
+      run: |
+        mkdir libs
+        curl -L -o libs/junit-platform-console-standalone.jar \
+          https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.4/junit-platform-console-standalone-1.9.4.jar
 
-      - name: Run tests
-        run: ./gradlew test
+    - name: Compile sources and tests
+      run: |
+        mkdir -p out/classes
+        mkdir -p out/test-classes
+        # Compile main sources
+        javac -d out/classes $(find src/main/java -name '*.java')
+        # Compile test sources with classpath to main classes + junit jar
+        javac -cp "out/classes:libs/junit-platform-console-standalone.jar" -d out/test-classes $(find src/test/java -name '*.java')
 
-      - name: Build the project
-        run: ./gradlew build
+    - name: Run tests
+      run: |
+        java -jar libs/junit-platform-console-standalone.jar \
+          --classpath out/classes:out/test-classes \
+          --scan-classpath
